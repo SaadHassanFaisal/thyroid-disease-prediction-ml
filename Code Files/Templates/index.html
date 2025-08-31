@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Predictive Modeling for Thyroid Disease Diagnosis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body class="theme-navy">
+  <div class="bg-decor" aria-hidden="true">
+    <div class="halo halo-1"></div>
+    <div class="halo halo-2"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🦋</span>
+      <div class="brand-text">
+        <h1>AI Thyroid Predictor</h1>
+        <p>Clinical-grade screening — fast and reliable</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2 class="card-title">Patient Inputs</h2>
+      <p class="card-sub">All fields are required. Limits prevent outliers.</p>
+
+      <form id="predictForm" action="/predict" method="POST" class="grid">
+        <!-- Age -->
+        <div class="field">
+          <label for="age">Age (years)</label>
+          <input type="number" id="age" name="age" inputmode="numeric" min="1" max="80" step="1" required>
+          <small class="hint">1–80</small>
+        </div>
+
+        <!-- Sex -->
+        <div class="field">
+          <label for="sex">Sex</label>
+          <select id="sex" name="sex" required>
+            <option value="M">Male (M)</option>
+            <option value="F">Female (F)</option>
+          </select>
+          <small class="hint">Backend maps F→0, M→1</small>
+        </div>
+
+        <!-- Binary flags (0/1) -->
+        <div class="divider" role="separator"><span>Clinical Flags</span></div>
+
+        <div class="field">
+          <label>On Thyroxine</label>
+          <div class="toggle">
+            <input type="radio" id="on_thyroxine_0" name="on_thyroxine" value="0" checked>
+            <label for="on_thyroxine_0">No</label>
+            <input type="radio" id="on_thyroxine_1" name="on_thyroxine" value="1">
+            <label for="on_thyroxine_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Query on Thyroxine</label>
+          <div class="toggle">
+            <input type="radio" id="query_on_thyroxine_0" name="query_on_thyroxine" value="0" checked>
+            <label for="query_on_thyroxine_0">No</label>
+            <input type="radio" id="query_on_thyroxine_1" name="query_on_thyroxine" value="1">
+            <label for="query_on_thyroxine_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>On Antithyroid Meds</label>
+          <div class="toggle">
+            <input type="radio" id="on_antithyroid_meds_0" name="on_antithyroid_meds" value="0" checked>
+            <label for="on_antithyroid_meds_0">No</label>
+            <input type="radio" id="on_antithyroid_meds_1" name="on_antithyroid_meds" value="1">
+            <label for="on_antithyroid_meds_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Sick</label>
+          <div class="toggle">
+            <input type="radio" id="sick_0" name="sick" value="0" checked>
+            <label for="sick_0">No</label>
+            <input type="radio" id="sick_1" name="sick" value="1">
+            <label for="sick_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Pregnant</label>
+          <div class="toggle">
+            <input type="radio" id="pregnant_0" name="pregnant" value="0" checked>
+            <label for="pregnant_0">No</label>
+            <input type="radio" id="pregnant_1" name="pregnant" value="1">
+            <label for="pregnant_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Thyroid Surgery</label>
+          <div class="toggle">
+            <input type="radio" id="thyroid_surgery_0" name="thyroid_surgery" value="0" checked>
+            <label for="thyroid_surgery_0">No</label>
+            <input type="radio" id="thyroid_surgery_1" name="thyroid_surgery" value="1">
+            <label for="thyroid_surgery_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>I131 Treatment</label>
+          <div class="toggle">
+            <input type="radio" id="I131_treatment_0" name="I131_treatment" value="0" checked>
+            <label for="I131_treatment_0">No</label>
+            <input type="radio" id="I131_treatment_1" name="I131_treatment" value="1">
+            <label for="I131_treatment_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Query Hypothyroid</label>
+          <div class="toggle">
+            <input type="radio" id="query_hypothyroid_0" name="query_hypothyroid" value="0" checked>
+            <label for="query_hypothyroid_0">No</label>
+            <input type="radio" id="query_hypothyroid_1" name="query_hypothyroid" value="1">
+            <label for="query_hypothyroid_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Query Hyperthyroid</label>
+          <div class="toggle">
+            <input type="radio" id="query_hyperthyroid_0" name="query_hyperthyroid" value="0" checked>
+            <label for="query_hyperthyroid_0">No</label>
+            <input type="radio" id="query_hyperthyroid_1" name="query_hyperthyroid" value="1">
+            <label for="query_hyperthyroid_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Goitre</label>
+          <div class="toggle">
+            <input type="radio" id="goitre_0" name="goitre" value="0" checked>
+            <label for="goitre_0">No</label>
+            <input type="radio" id="goitre_1" name="goitre" value="1">
+            <label for="goitre_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Tumor</label>
+          <div class="toggle">
+            <input type="radio" id="tumor_0" name="tumor" value="0" checked>
+            <label for="tumor_0">No</label>
+            <input type="radio" id="tumor_1" name="tumor" value="1">
+            <label for="tumor_1">Yes</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Psych</label>
+          <div class="toggle">
+            <input type="radio" id="psych_0" name="psych" value="0" checked>
+            <label for="psych_0">No</label>
+            <input type="radio" id="psych_1" name="psych" value="1">
+            <label for="psych_1">Yes</label>
+          </div>
+        </div>
+
+        <!-- Thyroid labs -->
+        <div class="divider" role="separator"><span>Thyroid Panel</span></div>
+
+        <div class="field">
+          <label for="TSH">TSH (μIU/mL)</label>
+          <input type="number" id="TSH" name="TSH" min="0" max="100" step="0.01" required>
+          <small class="hint">0–100</small>
+        </div>
+
+        <div class="field">
+          <label for="T3">T3 (ng/mL)</label>
+          <input type="number" id="T3" name="T3" min="0" max="2.0" step="0.01" required>
+          <small class="hint">0–2.0</small>
+        </div>
+
+        <div class="field">
+          <label for="TT4">TT4 (μg/dL)</label>
+          <input type="number" id="TT4" name="TT4" min="0" max="200" step="0.01" required>
+          <small class="hint">0–200</small>
+        </div>
+
+        <div class="field">
+          <label for="T4U">T4U (ratio)</label>
+          <input type="number" id="T4U" name="T4U" min="0" max="1.3" step="0.01" required>
+          <small class="hint">0–1.3</small>
+        </div>
+
+        <div class="field">
+          <label for="FTI">FTI (index)</label>
+          <input type="number" id="FTI" name="FTI" min="0" max="200" step="0.01" required>
+          <small class="hint">0–200</small>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">
+            <span class="icon">🔍</span> Predict
+          </button>
+          <button type="reset" class="btn ghost">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="card side">
+      <h3 class="card-title">Model Summary</h3>
+      <ul class="bullets">
+        <li>Stacking ensemble (RF + XGB + CatBoost)</li>
+        <li>ADASYN class balance</li>
+        <li>Min–Max scaling on continuous features</li>
+        <li>Binary flags encoded 0/1</li>
+      </ul>
+      <p class="note">Results complement clinical judgment; not a diagnosis.</p>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <span>© {{ 2025 }} Saad Hassan Faisal</span>
+  </footer>
+</body>
+</html>

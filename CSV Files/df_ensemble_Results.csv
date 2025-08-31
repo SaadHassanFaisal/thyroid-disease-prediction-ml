@@ -1,0 +1,13 @@
+Dataset,Model,Accuracy,Precision,Recall,F1 Score,ROC-AUC
+Preprocessed (All Features),Voting (Hard),0.947 ± 0.005,0.921 ± 0.005,0.871 ± 0.018,0.895 ± 0.010,
+Preprocessed (All Features),Voting (Soft),0.947 ± 0.003,0.922 ± 0.008,0.872 ± 0.017,0.896 ± 0.008,0.982 ± 0.003
+Preprocessed (All Features),Stacking,0.949 ± 0.004,0.928 ± 0.006,0.872 ± 0.019,0.899 ± 0.009,0.983 ± 0.002
+Preprocessed (Selected Features),Voting (Hard),0.939 ± 0.005,0.891 ± 0.003,0.871 ± 0.023,0.881 ± 0.011,
+Preprocessed (Selected Features),Voting (Soft),0.939 ± 0.005,0.893 ± 0.005,0.872 ± 0.022,0.882 ± 0.010,0.978 ± 0.003
+Preprocessed (Selected Features),Stacking,0.939 ± 0.005,0.899 ± 0.005,0.865 ± 0.021,0.882 ± 0.011,0.978 ± 0.003
+SMOTE Balanced (All Features),Voting (Hard),0.926 ± 0.002,0.932 ± 0.005,0.919 ± 0.004,0.925 ± 0.002,
+SMOTE Balanced (All Features),Voting (Soft),0.927 ± 0.002,0.933 ± 0.005,0.921 ± 0.004,0.927 ± 0.002,0.981 ± 0.001
+SMOTE Balanced (All Features),Stacking,0.929 ± 0.002,0.930 ± 0.005,0.929 ± 0.002,0.930 ± 0.002,0.981 ± 0.001
+SMOTE Balanced (Selected Features),Voting (Hard),0.926 ± 0.002,0.932 ± 0.005,0.919 ± 0.004,0.925 ± 0.002,
+SMOTE Balanced (Selected Features),Voting (Soft),0.927 ± 0.002,0.933 ± 0.005,0.921 ± 0.004,0.927 ± 0.002,0.981 ± 0.001
+SMOTE Balanced (Selected Features),Stacking,0.929 ± 0.002,0.930 ± 0.005,0.929 ± 0.002,0.930 ± 0.002,0.981 ± 0.001

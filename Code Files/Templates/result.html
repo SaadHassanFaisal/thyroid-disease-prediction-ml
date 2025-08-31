@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prediction Result • Thyroid AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="theme-navy">
+  <div class="bg-decor" aria-hidden="true">
+    <div class="halo halo-1"></div>
+    <div class="halo halo-2"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🦋</span>
+      <div class="brand-text">
+        <h1>AI Thyroid Predictor</h1>
+        <p>Prediction Outcome</p>
+      </div>
+    </div>
+    <a class="btn ghost" href="{{ url_for('index') }}">← New Prediction</a>
+  </header>
+
+  <main class="wrap single">
+    <section class="card result-card">
+      <h2 class="card-title">Result</h2>
+
+      <div class="result-row">
+        <span class="label">Classification:</span>
+        <span class="value {{ 'danger' if 'Detected' in result else 'success' }}">{{ result }}</span>
+      </div>
+
+      <div class="result-row">
+        <span class="label">Probability (Positive):</span>
+        <span class="value mono">{{ probability }}</span>
+      </div>
+
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 36 36" class="circular-chart">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00A3FF"/>
+              <stop offset="100%" stop-color="#7C83FF"/>
+            </linearGradient>
+          </defs>
+          <path class="circle-bg" d="M18 2.0845
+            a 15.9155 15.9155 0 0 1 0 31.831
+            a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <path id="probArc" class="circle"
+            stroke-dasharray="0, 100"
+            d="M18 2.0845
+            a 15.9155 15.9155 0 0 1 0 31.831
+            a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <text x="18" y="20.35" class="percentage" id="probText">0%</text>
+        </svg>
+      </div>
+
+      <div class="callouts">
+        <div class="callout {{ 'danger' if 'Detected' in result else 'success' }}">
+          <strong>{{ result }}</strong>
+          <p>
+            {% if 'Detected' in result %}
+              Consider further clinical evaluation and lab correlation.
+            {% else %}
+              Low likelihood — correlate with symptoms and history.
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      var p = Number("{{ probability }}");
+      if (!isNaN(p)) {
+        var pct = Math.round(p * 100);
+        var arc = document.getElementById('probArc');
+        var txt = document.getElementById('probText');
+        if (arc && txt) {
+          arc.setAttribute('stroke-dasharray', pct + ', 100');
+          txt.textContent = pct + '%';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
